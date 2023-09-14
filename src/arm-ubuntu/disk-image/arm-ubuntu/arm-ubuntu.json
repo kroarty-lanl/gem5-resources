@@ -3,14 +3,30 @@
     "_license": "Copyright (c) 2022 The Regents of the University of California. SPDX-License-Identifier: BSD 3-Clause",
     "builders": [
         {
-            "type": "null",
-            "ssh_host": "localhost",
-            "ssh_port": "5555",
-            "ssh_username": "ubuntu",
-            "ssh_agent_auth": true,
-            "ssh_ciphers":  ["aes128-gcm@openssh.com", "chacha20-poly1305@openssh.com", "aes128-ctr", "aes192-ctr", "aes256-ctr"],
-            "ssh_certificate_file": "~/.ssh/id_rsa",
-            "ssh_clear_authorized_keys": true
+            "type": "qemu",
+            "iso_url": "https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-arm64.img",
+            "iso_checksum": "file:https://cloud-images.ubuntu.com/focal/current/MD5SUMS",
+            "disk_image": true,
+            "disk_size": "10G",
+            "accelerator": "none",
+            "http_directory": "shared/",
+            "ssh_username": "{{ user `ssh_username` }}",
+            "ssh_password": "{{ user `ssh_password` }}",
+            "ssh_clear_authorized_keys": true,
+            "ssh_timeout": "20m",
+            "qemu_binary": "/usr/bin/qemu-system-aarch64",
+            "machine_type": "virt",
+            "cpu_model": "cortex-a57",
+            "firmware": "/usr/share/qemu-efi-aarch64/QEMU_EFI.fd",
+            "qemuargs": [
+                [ "-smbios", "type=1,serial=ds=nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/cloud-init/configs/" ]
+            ],
+            "shutdown_command": "echo '{{user `ssh_password` }}' | sudo -S shutdown -P now",
+            "headless": true,
+            "cpus": 2,
+            "memory": "8192",
+            "format": "raw",
+            "output_directory": "arm-ubuntu/arm-ubuntu-image"
         }
     ],
     "provisioners": [
@@ -79,5 +95,10 @@
             "type": "shell",
             "inline": "sudo apt-get -y remove lsb-release"
         }
-    ]
+    ],
+    "variables":
+    {
+        "ssh_username": "ubuntu",
+        "ssh_password": "12345"
+    }
 }

@@ -1,0 +1,12 @@
+#cloud-config
+ssh_pwauth: True
+users:
+  - name: ubuntu
+    lock_passwd: false
+    groups: sudo
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    plain_text_passwd: 12345
+apt:
+    proxy:
+    http_proxy:
+    https_proxy:
