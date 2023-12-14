@@ -1,0 +1,72 @@
+{
+    "_author": "Kyle Roarty <kroarty@lanl.gov>",
+    "_license": "Copyright (c) 2023 Triad National Security, LLC. SPDX-License-Identifier: BSD 3-Clause",
+    "builders":
+    [
+        {
+            "type": "qemu",
+            "iso_url": "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img",
+            "iso_checksum": "file:https://cloud-images.ubuntu.com/jammy/current/MD5SUMS",
+            "disk_image": true,
+            "disk_size": "5G",
+            "accelerator": "kvm",
+            "http_directory": "shared/",
+            "ssh_username": "{{ user `ssh_username` }}",
+            "ssh_password": "{{ user `ssh_password` }}",
+            "ssh_clear_authorized_keys": true,
+            "boot_wait": "2s",
+            "qemuargs": [
+              [ "-smbios", "type=1,serial=ds=nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/" ]
+            ],
+            "qemu_binary":"/usr/bin/qemu-system-x86_64",
+            "shutdown_command": "sudo shutdown -P now",
+            "headless": true,
+            "cpus": "2",
+            "memory": "8192",
+            "output_directory": "spatter-image",
+            "vm_name": "spatter",
+            "format": "raw"
+        }
+
+    ],
+    "provisioners":
+    [
+        {
+            "type": "file",
+            "source": "spatter/gem5-init.sh",
+            "destination": "/home/gem5/"
+        },
+        {
+            "type": "file",
+            "source": "shared/serial-getty@.service",
+            "destination": "/home/gem5/"
+        },
+        {
+            "type": "shell",
+            "environment_vars":
+            [
+                "PROXY={{user `proxy`}}"
+            ],
+            "scripts":
+            [
+                "spatter/m5-download.sh",
+                "spatter/spatter-install.sh"
+            ]
+        },
+        {
+            "type": "shell",
+            "execute_command": "sudo -E -s bash '{{.Path}}'",
+            "scripts":
+            [
+                "spatter/m5-setup.sh"
+            ]
+        }
+    ],
+    "variables":
+    {
+        "ssh_username": "gem5",
+        "ssh_password": "12345",
+        "proxy": ""
+    }
+
+}

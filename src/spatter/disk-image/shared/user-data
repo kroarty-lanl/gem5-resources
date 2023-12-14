@@ -1,0 +1,10 @@
+#cloud-config
+users:
+  - name: gem5
+    lock_passwd: false
+    groups: sudo
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    plain_text_passwd: 12345
+ssh_pwauth: True
+apt:
+    proxy: 
