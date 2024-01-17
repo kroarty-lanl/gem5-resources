@@ -4,10 +4,6 @@ sudo apt-get -y update
 sudo apt-get -y upgrade
 sudo apt-get -y install build-essential scons
 
-if [ ! -z "$PROXY" ]; then
-    git config --global http.proxy "$PROXY"
-fi
-
 git clone --no-checkout https://github.com/gem5/gem5.git
 cd gem5
 git sparse-checkout init --cone

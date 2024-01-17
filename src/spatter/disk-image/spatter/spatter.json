@@ -45,7 +45,8 @@
             "type": "shell",
             "environment_vars":
             [
-                "PROXY={{user `proxy`}}"
+                "http_proxy={{user `proxy`}}",
+                "http_proxys={{user `proxy`}}"
             ],
             "scripts":
             [
