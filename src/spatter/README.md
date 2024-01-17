@@ -86,6 +86,7 @@ cd gem5
 # Note: The build can sometimes fail if you allocate a large -j while not
 # having enough memory
 scons -j$(nproc) build/X86/gem5.opt
+```
 
 To run a simple Spatter example that mimics Stream:
 
