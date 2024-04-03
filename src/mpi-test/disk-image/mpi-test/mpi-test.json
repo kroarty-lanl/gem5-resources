@@ -21,8 +21,8 @@
             "qemu_binary":"/usr/bin/qemu-system-x86_64",
             "shutdown_command": "sudo shutdown -P now",
             "headless": true,
-            "cpus": "2",
-            "memory": "8192",
+            "cpus": "4",
+            "memory": "16384",
             "output_directory": "mpi-test-image",
             "vm_name": "mpi-test",
             "format": "raw"
